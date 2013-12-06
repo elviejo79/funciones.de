@@ -1,21 +1,16 @@
-{{set . "title" "Home"}}
+{{set . "title" "Funciones.De"}}
 {{template "header.html" .}}
 
-<header class="hero-unit" style="background-color:#A9F16C">
-  <div class="container">
-    <div class="row">
-      <div class="hero-text">
-        <h1>It works!</h1>
-        <p></p>
-      </div>
-    </div>
-  </div>
-</header>
-
 <div class="container">
-  <div class="row">
-    <div class="span6">
-      {{template "flash.html" .}}
+  <div class="space40"></div>
+  <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+    <div class="row">
+      <p>Selecciona tu Ciudad</p>
+      <select name="huge" class="select-block mbl">
+        <option value="0">Aguascalientes</option>
+        <option value="1">Morelia</option>
+        <option value="1">Zacatecas</option>
+      </select>
     </div>
   </div>
 </div>

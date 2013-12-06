@@ -20,3 +20,9 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+gopath/bin/revel
+
+gopath/bin/revel
+
+gopath/src/github.com/howeyc/fsnotify/
