@@ -3416,3 +3416,14 @@ Storage files: (filename : modification date - size)
 2013-12-07 22:48:36.802+0000 INFO  [o.n.k.i.DiagnosticsManager]: Mounted Neo4j Browser at: /browser
 2013-12-07 22:48:37.969+0000 INFO  [o.n.k.i.DiagnosticsManager]: Server started on: http://localhost:7474/
 2013-12-07 22:48:37.970+0000 INFO  [o.n.k.i.DiagnosticsManager]: --- SERVER STARTED END ---
+2013-12-08 16:11:16.653+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for an additional 35954398ms [total block time: 35954.4s]
+2013-12-09 06:35:53.840+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for an additional 114ms [total block time: 35954.51s]
+2013-12-09 16:54:53.421+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for an additional 33060657ms [total block time: 69015.17s]
+2013-12-09 17:55:58.701+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.1] @ version=6 to data/graph.db/nioneo_logical.log.2 from position 26214474
+2013-12-09 17:55:58.746+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26214170 out of [52974=Start[52974,xid=GlobalId[NEOKERNL|65507390788857146|75666], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-09 17:55:57.671+0000/1386611757671,lastCommittedTxWhenTransactionStarted=107861]]
+2013-12-09 17:55:58.790+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=320
+2013-12-09 17:55:58.809+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=320, version 7 and last tx 107861
+2013-12-09 19:04:00.893+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.2] @ version=7 to data/graph.db/nioneo_logical.log.1 from position 26214494
+2013-12-09 19:04:01.082+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=21109058 out of [105151=Start[105151,xid=GlobalId[NEOKERNL|-6709769900870083429|162663], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-09 19:03:58.554+0000/1386615838554,lastCommittedTxWhenTransactionStarted=160038]]
+2013-12-09 19:04:01.720+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=5105452
+2013-12-09 19:04:01.745+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=5105452, version 8 and last tx 160038

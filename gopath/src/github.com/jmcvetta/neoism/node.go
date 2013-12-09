@@ -68,6 +68,18 @@ func (db *Database) GetOrCreateNode(label, key string, p Props) (n *Node, create
 	if err != nil {
 		return nil, false, err
 	}
+
+	//make sure the label we are using is part of the ones the node has
+	label_found := false
+	for l := range n.Labels() {
+		if l==label {
+			label_found = true
+		}
+	}
+	if !label_found {
+		n.AddLabel(label)
+	}
+
 	switch resp.Status() {
 	case 200:
 		return n, false, nil // Existing node
