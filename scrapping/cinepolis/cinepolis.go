@@ -3,71 +3,58 @@ package cinepolis
 import (
 	"fmt"
 	"funciones.de/app/models"
-	"github.com/moovweb/gokogiri"
-	"github.com/moovweb/gokogiri/xml"
-	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
+	"../cinebase/"
 )
 
-func ExtractCities(url string) map[int]models.City {
+var Company models.Company = models.NewCompany("http://cinepolis.com", "cinepolis")
 
-	html, _ := getBody(url)
-	doc, err := gokogiri.ParseHtml(html)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer doc.Free()
 
-	options, _ := doc.Search("id('ctl00_ddlCiudad')/option")
-	cities := make(map[int]models.City)
-	for _, o := range options {
+func ExtractCities() (cities []models.City) {
+	options := cinebase.NodesExtractor(Company.Url, "id('ctl00_ddlCiudad')/option")
+
+	for i, o := range options {
+		if nil != o.Attributes()["value"] {
+		fmt.Printf("i %d o: %#v \n\n",i,o.Attributes()["value"])
 		val, _ := strconv.Atoi(o.Attributes()["value"].Content())
 		if val > 0 {
-			cities[val] = models.NewCity(val, o.Content())
+			cities = append(cities,models.NewCity(val, o.Content()))
+		}
 		}
 	}
 
 	return cities
-
 }
 
-func ExtractTheaters(url string) map[int]models.Theater {
-	result := make(map[int]models.Theater)
-	html, err := getBody(url)
-	if err != nil {
-		fmt.Printf("%#v", err)
-	}
-	doc, _ := gokogiri.ParseHtml(html)
-	defer doc.Free()
-	//theaters,_ := doc.Search("//a[ends-with(@id,'306')]");
-	movies, _ := doc.Search("//a[contains(@id, 'idPelCine')]")
+func ExtractTheaters(c models.City) (theaters []models.Theater) {
+	tmp := make(map[int]models.Theater)
+	url := fmt.Sprintf("http://cinepolis.com/_CARTELERA/cartelera.aspx?ic=%d", c.IdCity)
+	movies := cinebase.NodesExtractor(url,"//a[contains(@id, 'idPelCine')]")
 	for _, m := range movies {
-		cineId := nodeContent("@id", m)[14:]
-		cineName := nodeContent("//select[@name='cartelera"+cineId+"']/parent::*/parent::*/parent::*//span[@class='TitulosBlanco']", m)
+		cineId := cinebase.NodeContent("@id", m)[14:]
+		cineName := cinebase.NodeContent("//select[@name='cartelera"+cineId+"']/parent::*/parent::*/parent::*//span[@class='TitulosBlanco']", m)
 		intCineId, _ := strconv.Atoi(cineId)
-		result[intCineId] = models.NewTheater(intCineId, cineName)
+		tmp[intCineId] = models.NewTheater(intCineId, cineName)
 	}
-	return result
+
+	for _,t := range tmp {
+		theaters = append(theaters,t)
+	}
+
+	return 
 }
 
-func ExtractMovies(url string, idCine int) (res []models.Showtime, err error) {
-	html, err := getBody(url)
-	if err != nil {
-		fmt.Printf("%#v", err)
-	}
-	doc, _ := gokogiri.ParseHtml(html)
-	defer doc.Free()
-	//theaters,_ := doc.Search("//a[ends-with(@id,'306')]");
-	len_idCine := len(strconv.Itoa(idCine))-1
-	xpath := fmt.Sprintf("//a[contains(@id, 'idPelCine') and (substring(@id, string-length(@id) -%d)=%d)]", len_idCine,idCine)
-	movies, _ := doc.Search(xpath)
-	fmt.Printf("url: %s \nXpath: %s \nExtractMovies: %#v \n\n", url, xpath, movies)
+func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, err error) {
+	url := fmt.Sprintf("http://cinepolis.com/_CARTELERA/cartelera.aspx?ic=%d", c.IdCity)
+	len_idCine := len(strconv.Itoa(t.IdTheater))-1
+	xpath := fmt.Sprintf("//a[contains(@id, 'idPelCine') and (substring(@id, string-length(@id) -%d)=%d)]", len_idCine,t.IdTheater)
+
+	movies := cinebase.NodesExtractor(url,xpath)
 	for _, m := range movies {
-		cineId := nodeContent("@id", m)[14:]
-		titulo := nodeContent("parent::*//a[@class='peliculaCartelera']", m)
+		cineId := cinebase.NodeContent("@id", m)[14:]
+		titulo := cinebase.NodeContent("parent::*//a[@class='peliculaCartelera']", m)
 		subtitulos := titulo[len(titulo)-3:]
 		if subtitulos == "Sub" {
 			subtitulos = "SUBTITULADA"
@@ -132,32 +119,3 @@ func ExtractMovies(url string, idCine int) (res []models.Showtime, err error) {
 	return
 }
 
-var bodyCache = make(map[string][]byte)
-
-func getBody(url string) (body []byte, err error) {
-	if page, ok := bodyCache[url]; ok {
-		fmt.Printf("found url: %s \n\n", url)
-		return page, nil
-	}
-
-	client := http.Client{}
-	resp, err := client.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-	body, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	bodyCache[url] = body
-	return body, nil
-}
-
-func nodeContent(x_path string, m xml.Node) (result string) {
-	ts, _ := m.Search(x_path)
-	for _, e := range ts {
-		result = e.Content()
-	}
-	return
-}
