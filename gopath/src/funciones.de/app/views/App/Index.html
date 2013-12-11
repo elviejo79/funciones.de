@@ -7,10 +7,16 @@
     <div class="row">
       <p>Selecciona tu Ciudad</p>
       <select name="huge" class="select-block mbl">
-        <option value="0">Aguascalientes</option>
-        <option value="1">Morelia</option>
-        <option value="1">Zacatecas</option>
+        {{range .cities}}
+        <option value="{{.IdCity}}">{{.Name}}</option>
+        {{end}}
       </select>
+      <ul>
+        {{range .cities}}
+        <li><a href="/{{.Abbrev}}">{{.Name}}</a></li>
+        {{end}}
+
+      </ul>
     </div>
   </div>
 </div>

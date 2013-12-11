@@ -3458,3 +3458,4 @@ Storage files: (filename : modification date - size)
 2013-12-11 02:39:22.090+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26213898 out of [338460=Start[338460,xid=GlobalId[NEOKERNL|1140065058082540144|509963], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-11 02:39:20.740+0000/1386729560740,lastCommittedTxWhenTransactionStarted=393347]]
 2013-12-11 02:39:22.134+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=547
 2013-12-11 02:39:22.151+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=547, version 13 and last tx 393347
+2013-12-11 16:04:48.988+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for an additional 37322570ms [total block time: 114011.39s]
