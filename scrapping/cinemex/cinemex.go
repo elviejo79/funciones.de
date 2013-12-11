@@ -29,7 +29,6 @@ func ExtractTheaters(c models.City) ( theaters []models.Theater) {
 			for _,c := range a.Cinemas {
 				theaters = append(theaters,models.NewTheater(c.Id,c.Name))
 			}
-
 		}
 	}
 	return

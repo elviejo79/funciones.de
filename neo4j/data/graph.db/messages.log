@@ -3437,3 +3437,24 @@ Storage files: (filename : modification date - size)
 2013-12-10 18:20:29.155+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=25588629 out of [26709=Start[26709,xid=GlobalId[NEOKERNL|5862827653415696062|229138], BranchId[ 49 54 50 51 55 52 ],master=-1,me=-1,time=2013-12-10 18:20:26.180+0000/1386699626180,lastCommittedTxWhenTransactionStarted=30997]]
 2013-12-10 18:20:29.309+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=625814
 2013-12-10 18:20:29.335+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=625814, version 7 and last tx 30997
+2013-12-10 20:42:01.036+0000 WARN  [o.n.k.EmbeddedGraphDatabase]: GC Monitor: Application threads blocked for an additional 1480304ms [total block time: 76688.82s]
+2013-12-10 21:36:03.338+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.2] @ version=9 to data/graph.db/nioneo_logical.log.1 from position 26214491
+2013-12-10 21:36:03.382+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26214425 out of [199449=Start[199449,xid=GlobalId[NEOKERNL|-6805594095700397754|305245], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-10 21:36:02.492+0000/1386711362492,lastCommittedTxWhenTransactionStarted=254336]]
+2013-12-10 21:36:03.426+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=82
+2013-12-10 21:36:03.447+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=82, version 10 and last tx 254336
+2013-12-10 23:47:36.863+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.1] @ version=10 to data/graph.db/nioneo_logical.log.2 from position 26214562
+2013-12-10 23:47:36.907+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26214496 out of [247039=Start[247039,xid=GlobalId[NEOKERNL|-3520377458141808581|373643], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-10 23:47:36.001+0000/1386719256001,lastCommittedTxWhenTransactionStarted=301926]]
+2013-12-10 23:47:36.951+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=82
+2013-12-10 23:47:36.969+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=82, version 11 and last tx 301926
+2013-12-11 00:02:36.226+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/index/lucene.log.2] @ version=7 to data/graph.db/index/lucene.log.1 from position 26214524
+2013-12-11 00:02:36.269+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26214180 out of [54367=Start[54367,xid=GlobalId[NEOKERNL|2282802572753426329|389331], BranchId[ 49 54 50 51 55 52 ],master=-1,me=-1,time=2013-12-11 00:02:33.582+0000/1386720153582,lastCommittedTxWhenTransactionStarted=58655]]
+2013-12-11 00:02:36.313+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=360
+2013-12-11 00:02:36.327+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=360, version 8 and last tx 58655
+2013-12-11 01:01:53.032+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.2] @ version=11 to data/graph.db/nioneo_logical.log.1 from position 26214462
+2013-12-11 01:01:53.253+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=19043191 out of [298159=Start[298159,xid=GlobalId[NEOKERNL|9133121517564005552|450090], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-11 01:01:50.212+0000/1386723710212,lastCommittedTxWhenTransactionStarted=353046]]
+2013-12-11 01:01:53.936+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=7171287
+2013-12-11 01:01:53.950+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=7171287, version 12 and last tx 353046
+2013-12-11 02:39:22.022+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotating [data/graph.db/nioneo_logical.log.1] @ version=12 to data/graph.db/nioneo_logical.log.2 from position 26214429
+2013-12-11 02:39:22.090+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate log first start entry @ pos=26213898 out of [338460=Start[338460,xid=GlobalId[NEOKERNL|1140065058082540144|509963], BranchId[ 52 49 52 49 52 49 ],master=-1,me=-1,time=2013-12-11 02:39:20.740+0000/1386729560740,lastCommittedTxWhenTransactionStarted=393347]]
+2013-12-11 02:39:22.134+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Rotate: old log scanned, newLog @ pos=547
+2013-12-11 02:39:22.151+0000 INFO  [o.n.k.i.t.x.XaLogicalLog]: Log rotated, newLog @ pos=547, version 13 and last tx 393347

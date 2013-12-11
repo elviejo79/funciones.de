@@ -1,6 +1,5 @@
 package cinebase
 import (
-	"fmt"
 	"github.com/moovweb/gokogiri"
 	"github.com/moovweb/gokogiri/xml"
 	"io/ioutil"
@@ -12,7 +11,6 @@ var bodyCache = make(map[string][]byte)
 
 func GetBody(url string) (body []byte, err error) {
 	if page, ok := bodyCache[url]; ok {
-		fmt.Printf("found url: %s \n\n", url)
 		return page, nil
 	}
 

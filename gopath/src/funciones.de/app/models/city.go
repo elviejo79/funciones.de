@@ -3,6 +3,7 @@ package models
 import (
 	"strings"
 	"fmt"
+	"regexp"
 )
 
 type City struct {
@@ -12,6 +13,8 @@ type City struct {
 }
 
 func NewCity(IdCity int,Name string) (City){
+	re := regexp.MustCompile("(\\s+)")
+	Name=strings.TrimSpace(re.ReplaceAllString(Name, " "))
 	return City{IdCity,Name, ActiveRecord{nil}}
 }
 

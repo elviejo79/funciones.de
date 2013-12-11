@@ -11,17 +11,21 @@ import (
 
 var Company models.Company = models.NewCompany("http://cinepolis.com", "cinepolis")
 
-
 func ExtractCities() (cities []models.City) {
 	options := cinebase.NodesExtractor(Company.Url, "id('ctl00_ddlCiudad')/option")
 
-	for i, o := range options {
+	for _, o := range options {
 		if nil != o.Attributes()["value"] {
-		fmt.Printf("i %d o: %#v \n\n",i,o.Attributes()["value"])
-		val, _ := strconv.Atoi(o.Attributes()["value"].Content())
-		if val > 0 {
-			cities = append(cities,models.NewCity(val, o.Content()))
-		}
+
+			val, _ := strconv.Atoi(o.Attributes()["value"].Content())
+			cityName := o.Content()
+			df_am :="D.F. y A.M. ("
+			if strings.Contains(cityName,df_am){
+				cityName = cityName[len(df_am):len(cityName)-1]
+			}
+			if val > 0 {
+				cities = append(cities,models.NewCity(val, cityName))
+			}
 		}
 	}
 
@@ -36,7 +40,9 @@ func ExtractTheaters(c models.City) (theaters []models.Theater) {
 		cineId := cinebase.NodeContent("@id", m)[14:]
 		cineName := cinebase.NodeContent("//select[@name='cartelera"+cineId+"']/parent::*/parent::*/parent::*//span[@class='TitulosBlanco']", m)
 		intCineId, _ := strconv.Atoi(cineId)
-		tmp[intCineId] = models.NewTheater(intCineId, cineName)
+		if cineName != "" {
+			tmp[intCineId] = models.NewTheater(intCineId, cineName)
+		}
 	}
 
 	for _,t := range tmp {

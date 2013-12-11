@@ -62,7 +62,7 @@ func CreateTheaters(co *models.Company, newCity models.City) {
 	}
 
 
-	fmt.Printf("For City %s found %d theaters",newCity.Name,len(theaters))
+	fmt.Printf("For City %s found %d theaters\n",newCity.Name,len(theaters))
 	for _, t := range theaters {
 		t.Save()
 		newCity.Node().Relate("has_a", t.Node().Id(), neoism.Props{})
@@ -85,5 +85,8 @@ func CreateShowtimes(co *models.Company, newCity models.City, newTheater models.
 		movie := models.NewMovie(s.IdMovie)
 		movie.Save()
 		s.Node().Relate("exhibits", movie.Node().Id(), neoism.Props{})
+
+		//agarcia: showtimes as relationship not nodes
+		//newTheater.Node().Relate("showtime",movie.Node().Id(),models.StructToMap(s))
 	}
 }
