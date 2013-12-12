@@ -4,9 +4,10 @@
 
 module:testrunner
 
-GET     /                                       App.Index
-GET     /:cityName                              App.TheatersByCity
+
 GET     /buy/:showtimeKey                       App.Buy
+GET     /:cityName                              App.TheatersByCity
+GET     /                                       App.Index
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

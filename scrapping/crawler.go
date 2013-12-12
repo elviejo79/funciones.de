@@ -30,7 +30,7 @@ func main() {
 	cinemex.Company.Save()
 
 	CreateCities(&cinemex.Company)
-	CreateCities(&cinepolis.Company)
+//	CreateCities(&cinepolis.Company)
 
 }
 

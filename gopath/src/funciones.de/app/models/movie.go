@@ -47,14 +47,14 @@ func (this *Movie) GetShowtimesInTheaters(ts []Theater) (results []Showtime){
 	in := strings.Join(ts_keys,"', '")
 
 	var cypher_return string
-	for k,_ := range StructToMap(NewShowtime("","","","","","")) {
+	for k,_ := range StructToMap(new(Showtime)) {
 		cypher_return = cypher_return +fmt.Sprintf("s.%s as %s, ",k,k)
 	}
 	cypher_return=cypher_return[:len(cypher_return)-2]
 
 	cq := neoism.CypherQuery{
 		Statement: `start m=node:node_auto_index(title='`+this.Title+
-			`') MATCH (t:Theater)--(s:Showtime)--(m) WHERE t.key IN ['`+in+`'] RETURN `+cypher_return+` ORDER BY s.time ASC`,
+			`') MATCH (t:Theater)--(s:Showtime)--(m) WHERE t.key IN ['`+in+`'] RETURN DISTINCT `+cypher_return+` ORDER BY s.time ASC`,
 		Parameters: map[string]interface{}{},
 		Result: &results,
 	}

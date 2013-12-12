@@ -3,6 +3,8 @@ package controllers
 import (
 	"github.com/robfig/revel"
 	"funciones.de/app/models"
+	"runtime/pprof"
+	"os"
 )
 
 type App struct {
@@ -10,6 +12,10 @@ type App struct {
 }
 
 func (c App) TheatersByCity(cityName string) revel.Result {
+	//profiling
+	f, _ := os.Create("my_profile.file")
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
 	city:= models.CityByName(cityName)
 
 
@@ -21,7 +27,8 @@ func (c App) TheatersByCity(cityName string) revel.Result {
 
 
 func (c App) Buy(showtimeKey string) revel.Result {
-	return c.Render(showtimeKey)
+	s:=models.ShowtimeByKey(showtimeKey)
+	return c.Render(s)
 }
 
 func (c App) Index(strCity string) revel.Result {

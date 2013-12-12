@@ -38,9 +38,8 @@ func NodeContent(x_path string, m xml.Node) (result string) {
 
 func NodesExtractor(url string, xpath string) ([]xml.Node){
 	html,err := GetBody(url)
-
 	if err != nil {
-		log.Fatal("NodesExtractor",err)
+		log.Printf("In url: %s, NodesExtractor: %v",url, err)
 	}
 	doc, err := gokogiri.ParseHtml(html)
 	if err != nil {
@@ -59,3 +58,8 @@ func NodesExtractor(url string, xpath string) ([]xml.Node){
 	return movies
 }
 
+//This structure is used in cinepolis.go and cinemex.go
+type TimeLinks struct {
+	T string
+	BuyLink string
+}

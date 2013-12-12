@@ -1,12 +1,12 @@
 package cinepolis
 
 import (
+	"../cinebase/"
 	"fmt"
 	"funciones.de/app/models"
 	"strconv"
 	"strings"
 	"time"
-	"../cinebase/"
 )
 
 var Company models.Company = models.NewCompany("http://cinepolis.com", "cinepolis")
@@ -19,12 +19,12 @@ func ExtractCities() (cities []models.City) {
 
 			val, _ := strconv.Atoi(o.Attributes()["value"].Content())
 			cityName := o.Content()
-			df_am :="D.F. y A.M. ("
-			if strings.Contains(cityName,df_am){
-				cityName = cityName[len(df_am):len(cityName)-1]
+			df_am := "D.F. y A.M. ("
+			if strings.Contains(cityName, df_am) {
+				cityName = cityName[len(df_am) : len(cityName)-1]
 			}
 			if val > 0 {
-				cities = append(cities,models.NewCity(val, cityName))
+				cities = append(cities, models.NewCity(val, cityName))
 			}
 		}
 	}
@@ -35,7 +35,7 @@ func ExtractCities() (cities []models.City) {
 func ExtractTheaters(c models.City) (theaters []models.Theater) {
 	tmp := make(map[int]models.Theater)
 	url := fmt.Sprintf("http://cinepolis.com/_CARTELERA/cartelera.aspx?ic=%d", c.IdCity)
-	movies := cinebase.NodesExtractor(url,"//a[contains(@id, 'idPelCine')]")
+	movies := cinebase.NodesExtractor(url, "//a[contains(@id, 'idPelCine')]")
 	for _, m := range movies {
 		cineId := cinebase.NodeContent("@id", m)[14:]
 		cineName := cinebase.NodeContent("//select[@name='cartelera"+cineId+"']/parent::*/parent::*/parent::*//span[@class='TitulosBlanco']", m)
@@ -45,19 +45,19 @@ func ExtractTheaters(c models.City) (theaters []models.Theater) {
 		}
 	}
 
-	for _,t := range tmp {
-		theaters = append(theaters,t)
+	for _, t := range tmp {
+		theaters = append(theaters, t)
 	}
 
-	return 
+	return
 }
 
 func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, err error) {
 	url := fmt.Sprintf("http://cinepolis.com/_CARTELERA/cartelera.aspx?ic=%d", c.IdCity)
-	len_idCine := len(strconv.Itoa(t.IdTheater))-1
-	xpath := fmt.Sprintf("//a[contains(@id, 'idPelCine') and (substring(@id, string-length(@id) -%d)=%d)]", len_idCine,t.IdTheater)
+	len_idCine := len(strconv.Itoa(t.IdTheater)) - 1
+	xpath := fmt.Sprintf("//a[contains(@id, 'idPelCine') and (substring(@id, string-length(@id) -%d)=%d)]", len_idCine, t.IdTheater)
 
-	movies := cinebase.NodesExtractor(url,xpath)
+	movies := cinebase.NodesExtractor(url, xpath)
 	for _, m := range movies {
 		cineId := cinebase.NodeContent("@id", m)[14:]
 		titulo := cinebase.NodeContent("parent::*//a[@class='peliculaCartelera']", m)
@@ -88,7 +88,7 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 			//titulo=titulo
 			sala = ""
 		}
-		sala = "R" + sala
+
 		titulo = strings.ToUpper(titulo)
 		titulo = strings.Replace(titulo, ":", "", -1)
 		t := time.Now().Format("20060102")
@@ -99,6 +99,7 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 			subtitulos,
 			sala,
 			t,
+			"",
 			"00:00",
 		)
 
@@ -107,15 +108,20 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 			fmt.Println(err)
 		}
 
-		horas := []string{}
+		var horas []cinebase.TimeLinks
 		for _, e := range hours {
 			t, _ := time.Parse("3:04pm", e.Content())
-			horas = append(horas, t.Format("15:04"))
+			horas = append(horas,
+				cinebase.TimeLinks{
+					t.Format("15:04"),
+					"http://buySomeTicket.com??",//e.Attributes()["href"].Content(),
+				})
 		}
 
 		//if row != nil {
 		for _, h := range horas {
-			row.Time = h
+			row.Time = h.T
+			row.BuyLink = h.BuyLink
 			res = append(res, row)
 		}
 		//}
@@ -124,4 +130,3 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 
 	return
 }
-
