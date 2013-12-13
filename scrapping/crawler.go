@@ -9,6 +9,17 @@ import (
 	"log"
 )
 
+
+func main() {
+	cleanup(models.GlobalDb())
+	cinepolis.Company.Save()
+	cinemex.Company.Save()
+
+	CreateCities(&cinemex.Company)
+	CreateCities(&cinepolis.Company)
+
+}
+
 func cleanup(db *neoism.Database) {
 	qs := []*neoism.CypherQuery{
 		&neoism.CypherQuery{
@@ -24,16 +35,6 @@ func cleanup(db *neoism.Database) {
 	}
 }
 
-func main() {
-	cleanup(models.GlobalDb())
-	cinepolis.Company.Save()
-	cinemex.Company.Save()
-
-	CreateCities(&cinemex.Company)
-//	CreateCities(&cinepolis.Company)
-
-}
-
 func CreateCities(co *models.Company){
 	var cities []models.City
 
@@ -41,12 +42,15 @@ func CreateCities(co *models.Company){
 		cities = cinepolis.ExtractCities()
 	} else {
 		cities = cinemex.ExtractCities()
+		CreateMovies(co)
 	}
-	
+
 	for _, c := range cities {
-		c.Save()
-		co.Node().Relate("operates_in", c.Node().Id(), neoism.Props{})
-		CreateTheaters(co,c)
+		if c.Name == "Zacatecas" {
+			c.Save()
+			co.Node().Relate("operates_in", c.Node().Id(), neoism.Props{})
+			CreateTheaters(co,c)
+		}
 	}
 
 }
@@ -82,11 +86,22 @@ func CreateShowtimes(co *models.Company, newCity models.City, newTheater models.
 	for _, s := range showtimes {
 		s.Save()
 		newTheater.Node().Relate("presents_at", s.Node().Id(), neoism.Props{})
-		movie := models.NewMovie(s.IdMovie)
+		movie := models.MovieByTitle(s.IdMovie)
 		movie.Save()
 		s.Node().Relate("exhibits", movie.Node().Id(), neoism.Props{})
 
 		//agarcia: showtimes as relationship not nodes
 		//newTheater.Node().Relate("showtime",movie.Node().Id(),models.StructToMap(s))
+	}
+}
+
+func CreateMovies(co *models.Company) {
+	var ms []models.Movie
+	ms= cinemex.ExtractMovies() //first cinemex because it has more data
+	fmt.Printf("cinemex movies %d movies\n",len(ms))
+	ms = append(ms,cinepolis.ExtractMovies()...)
+	fmt.Printf("total movies %d movies\n",len(ms))
+	for _, m := range ms {
+		m.Save()
 	}
 }

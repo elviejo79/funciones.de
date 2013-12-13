@@ -32,7 +32,7 @@ func ShowtimeByKey(key string) (Showtime){
 	cypher_return=cypher_return[:len(cypher_return)-2]
 
 	cq := neoism.CypherQuery{
-		Statement: `MATCH (s:Showtime) WHERE s.key = '`+key+`' RETURN `+cypher_return,
+		Statement: `MATCH (s:Showtime) WHERE s.key = '`+key+`'  RETURN DISTINCT `+cypher_return,
 		Parameters: map[string]interface{}{},
 		Result: &results,
 	}
@@ -50,12 +50,14 @@ func ShowtimesForTheaters(ts []Theater) (results []Showtime){
 
 	var cypher_return string
 	for k,_ := range StructToMap(new(Showtime)) {
-		cypher_return = cypher_return +fmt.Sprintf("s.%s as %s, ",k,k)
+		if k != "key" {
+			cypher_return = cypher_return +fmt.Sprintf("s.%s as %s, ",k,k)
+		}
 	}
 	cypher_return=cypher_return[:len(cypher_return)-2]
 
 	cq := neoism.CypherQuery{
-		Statement: `MATCH (t:Theater)--(s:Showtime)--(m) WHERE t.key IN ['`+in+`'] RETURN `+cypher_return+` ORDER BY s.time ASC`,
+		Statement: `MATCH (t:Theater)--(s:Showtime)--(m) WHERE t.key IN ['`+in+`']  RETURN DISTINCT `+cypher_return+` ORDER BY s.time,s.idMovie,s.idTheater ASC`,
 		Parameters: map[string]interface{}{},
 		Result: &results,
 	}

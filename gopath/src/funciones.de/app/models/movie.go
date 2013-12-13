@@ -5,15 +5,55 @@ import (
 	"fmt"
 	"github.com/jmcvetta/neoism"
 	"log"
+	"strconv"
 )
 
 type Movie struct {
 	Title string `json:"title"`
+	Cover string 
+	Cast string
+	Country string
+	Director string
+	Genre string
+	OriginalTitle string
+	Sinopsis string
+	Trailer string
+	Duration int
+	Year int
+	
 	ActiveRecord
 }
 
-func NewMovie(Title string) (Movie){
-	return Movie{Title, ActiveRecord{nil}}
+func NewMovie(	Title, Cover,Cast,Country,Director,Genre,OriginalTitle,Sinopsis,Trailer,Duration, Year string) (Movie){
+	d,_ :=strconv.Atoi(Duration)
+	y,_ :=strconv.Atoi(Year)
+	t :=strings.ToUpper(Title)
+	return Movie{t, Cover,Cast,Country,Director,Genre,OriginalTitle,Sinopsis,Trailer,d, y, ActiveRecord{nil}}
+}
+func NewMovieWithTitle(Title string) (Movie){
+	return NewMovie(Title,"","","","","","","","","", "")
+}
+
+func movieCypherReturn() (cypher_return string){
+	for k,_ := range StructToMap(new(Movie)) {
+		cypher_return = cypher_return +fmt.Sprintf("m.%s as %s, ",k,k)
+	}
+	cypher_return=cypher_return[:len(cypher_return)-2]
+	return
+
+}
+func MovieByTitle(Title string) (Movie){
+
+	var results []Movie
+	cq := neoism.CypherQuery{
+                Statement: `start m=node:node_auto_index(title = '`+Title+
+			`') RETURN `+movieCypherReturn(),
+                Parameters: map[string]interface{}{},
+                Result: &results,
+        }
+	
+        GlobalDb().Cypher(&cq)
+	return results[0]
 }
 
 func MoviesByTheaters(ts []Theater) (results []Movie){
@@ -24,7 +64,8 @@ func MoviesByTheaters(ts []Theater) (results []Movie){
 	in := strings.Join(ts_keys,"', '")
 
 	cq := neoism.CypherQuery{
-                Statement: `MATCH (t:Theater)--(s:Showtime)--(m:Movie) WHERE t.key IN ['`+in+`'] RETURN m.title as title, count(s) ORDER BY count(s) DESC`,
+                Statement: `MATCH (t:Theater)--(s:Showtime)--(m:Movie) WHERE t.key IN ['`+in+`'] RETURN DISTINCT `+
+			movieCypherReturn()+`,  count(s) ORDER BY count(s) DESC`,
                 Parameters: map[string]interface{}{},
                 Result: &results,
         }

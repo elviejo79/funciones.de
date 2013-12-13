@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"../cinemex"
+	"../cinepolis"
 	_ "time"
 )
 type info struct{
@@ -38,15 +38,10 @@ func TestDecoding() {
 	fmt.Printf("json %#v \n", m)
 }
 
-const SHOWTIMES_URL := "http://cinemex.com/partials/sidebarCinema/%d/date-%s"
-func TheaterShowtimes(t models.Theater) ([]models.Showtime){
-}
 
 func main(){
-	theaters := cinemex.ExtractTheaters("http://cinemex.com/")
-	//t := time.Now().Format("20060102")
-	fmt.Printf("theater: %#v \n", theaters)
-	showtimes,_ :=cinemex.ExtractMovies(
+//	theaters := cinemex.ExtractTheaters("http://cinemex.com/")
+	movies :=cinepolis.ExtractMovies()
+	fmt.Printf("cuantas peliculas son? %d \n", len(movies))
 
-	fmt.Printf("showtimes %#v\n\n",showtimes)
 }

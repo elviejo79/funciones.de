@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"log"
 )
 
 var Company models.Company = models.NewCompany("http://cinepolis.com", "cinepolis")
@@ -58,46 +59,19 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 	xpath := fmt.Sprintf("//a[contains(@id, 'idPelCine') and (substring(@id, string-length(@id) -%d)=%d)]", len_idCine, t.IdTheater)
 
 	movies := cinebase.NodesExtractor(url, xpath)
+
 	for _, m := range movies {
 		cineId := cinebase.NodeContent("@id", m)[14:]
 		titulo := cinebase.NodeContent("parent::*//a[@class='peliculaCartelera']", m)
-		subtitulos := titulo[len(titulo)-3:]
-		if subtitulos == "Sub" {
-			subtitulos = "SUBTITULADA"
-		} else {
-			subtitulos = "ESPAÑOL"
-		}
-
-		sala := titulo[len(titulo)-7 : len(titulo)-4]
-		if strings.Contains(titulo, " 4D") {
-			titulo = titulo[:strings.Index(titulo, " 4D")]
-			sala = "4D"
-		} else if strings.Contains(titulo, " 3D ") {
-			titulo = titulo[:strings.Index(titulo, " 3D ")]
-			sala = "3D"
-		} else if strings.Contains(titulo, " IMAX") {
-			titulo = titulo[:strings.Index(titulo, " IMAX")]
-			sala = "IMAX"
-		} else if strings.Contains(titulo, " XE") {
-			titulo = titulo[:strings.Index(titulo, " XE ")]
-			sala = "XE"
-		} else if strings.Contains(titulo, " Dig ") {
-			titulo = titulo[:strings.Index(titulo, " Dig ")]
-			sala = "Dig"
-		} else {
-			//titulo=titulo
-			sala = ""
-		}
-
-		titulo = strings.ToUpper(titulo)
-		titulo = strings.Replace(titulo, ":", "", -1)
+		pT := parseTitle(titulo)
+		
 		t := time.Now().Format("20060102")
 
 		row := models.NewShowtime(
 			cineId, //cineID
-			titulo,
-			subtitulos,
-			sala,
+			pT.Title,
+			pT.Subtitle,
+			pT.Other,
 			t,
 			"",
 			"00:00",
@@ -111,10 +85,11 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 		var horas []cinebase.TimeLinks
 		for _, e := range hours {
 			t, _ := time.Parse("3:04pm", e.Content())
+			log.Printf("e.Attributes(): %#v \n",e.Attributes() )
 			horas = append(horas,
 				cinebase.TimeLinks{
 					t.Format("15:04"),
-					"http://buySomeTicket.com??",//e.Attributes()["href"].Content(),
+					e.Attributes()["href"].Content(),
 				})
 		}
 
@@ -127,6 +102,66 @@ func ExtractShowtimes(c models.City, t models.Theater) (res []models.Showtime, e
 		//}
 
 	}
+	return
+}
+
+func ExtractMovies()(results []models.Movie){
+
+	xNodes := cinebase.NodesExtractor("http://cinepolis.com/index.asp", "id('ctl00_ddlPelicula')/option")
+
+	for _, x := range xNodes {
+		rawTitle := x.Content()
+		pT := parseTitle(rawTitle)
+		results = append(results,models.NewMovieWithTitle(pT.Title))
+	}
+	return
+}
+
+type parsedTitle struct {
+	Title string
+	Subtitle string
+	Other string
+}
+func parseTitle(complexTitle string)(parsed parsedTitle){
+	complexTitle = strings.Replace(complexTitle,":"," ", -1)
+
+	languages := []string{"SUB","ESP"}
+	roomTypes := []string{"3D","4DX","IMAX","XE","DIG",}
+	parts := strings.Fields(strings.ToUpper(complexTitle))
+
+	langPart := ""
+	if stringInSlice(parts[len(parts)-1],languages){
+		langPart = parts[len(parts)-1]
+		parts = parts[:len(parts)-1]
+	}
+	if langPart == "SUB" {
+		parsed.Subtitle = "SUBTITULADA"
+	} else {
+		parsed.Subtitle  = "ESPAÑOL"
+	}
+
+	var arrTitle []string
+	i := -1
+	found:=true
+	for found && i < len(parts)-1 {		
+		i=i+1
+		if stringInSlice(parts[i],roomTypes) {
+			parsed.Other = strings.Join(parts[i:]," ")
+			found = false
+		}else{
+			arrTitle=append(arrTitle,parts[i])
+		}
+	}
+	parsed.Title = strings.Join(arrTitle," ")
 
 	return
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
