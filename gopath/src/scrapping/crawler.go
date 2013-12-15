@@ -14,7 +14,8 @@ func main() {
 	cinepolis.Company.Save()
 	cinemex.Company.Save()
 
-	CreateMovies(&cinepolis.Company)
+	CreateMovies(&cinemex.Company)
+	//CreateMovies(&cinepolis.Company)
 //	CreateCities(&cinemex.Company)
 //	CreateCities(&cinepolis.Company)
 
@@ -97,8 +98,8 @@ func CreateShowtimes(co *models.Company, newCity models.City, newTheater models.
 
 func CreateMovies(co *models.Company) {
 	var ms []models.Movie
-	//ms= cinemex.ExtractMovies() //first cinemex because it has more data
-	//fmt.Printf("cinemex movies %d movies\n",len(ms))
+	ms= cinemex.ExtractMovies() //first cinemex because it has more data
+	fmt.Printf("cinemex movies %d movies\n",len(ms))
 	ms = append(ms, cinepolis.ExtractMovies()...)
 	fmt.Printf("total movies %d movies\n", len(ms))
 	for _, m := range ms {

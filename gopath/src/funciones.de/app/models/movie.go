@@ -28,6 +28,7 @@ func NewMovie(	Title, Cover,Cast,Country,Director,Genre,OriginalTitle,Sinopsis,T
 	d,_ :=strconv.Atoi(Duration)
 	y,_ :=strconv.Atoi(Year)
 	t :=strings.ToUpper(Title)
+	
 	return Movie{t, Cover,Cast,Country,Director,Genre,OriginalTitle,Sinopsis,Trailer,d, y, ActiveRecord{nil}}
 }
 func NewMovieWithTitle(Title string) (Movie){

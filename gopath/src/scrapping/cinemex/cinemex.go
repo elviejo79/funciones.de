@@ -93,9 +93,10 @@ func ExtractMovies()(results []models.Movie){
 	html := extractJson([]byte("var movies = [{"),[]byte("}];"))
 	json.Unmarshal(html,&tmp)
 	for _,m := range tmp {
-		results = append(models.NewMovie(
+		results = append(results,models.NewMovie(
 			m.Name,
 			m.Cover,
+			m.Info.Cast,
 			m.Info.Country,
 			m.Info.Director,
 			m.Info.Genre[0],
