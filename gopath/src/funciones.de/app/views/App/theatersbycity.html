@@ -1,0 +1,66 @@
+{{set . "title" "Funciones.De"}}
+{{template "header.html" .}}
+
+<div class="container">
+  <div class="space40"></div>
+  <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+    <div class="row">
+      <h1>Theaters By City</h1>
+      <p>{{.city.Name}}</p>
+
+        {{range .theaters}}
+        <input type="checkbox" name="preferedTheaters[]" value="{{.Name}}">{{.Name}}<br>
+        {{end}}
+
+    </div>
+    <div>
+      <h2><a name="top">Movies For Those Theaters</a></h2>
+      <ul>
+      {{range .movies}}
+      <li><a href="#{{.Title}}"><img src="http://{{.Cover}}"/><br/>{{.Title}}</a></li>
+      {{end}}
+      </ul>
+    </div>
+    <div>
+      <h2>Showtimes For Those Theaters</h2>
+      {{$ts := .theaters}}
+      {{range .movies}}
+      <table>
+        <a name="{{.Title}}"><caption><img src="http://{{.Cover}}"/> <br/>{{.Title}}</caption></a>
+        {{range .GetShowtimesInTheaters $ts}}
+        <tr>
+          <td>{{.Time}}</td><td>{{.Language}}</td><td>{{.RoomType}}</td><td>{{.IdTheater}}</td>
+          <td><a href="/buy/{{.GenKey}}">[comprar]</a></td>
+        </tr>
+        {{end}}
+        <tfoot>
+          <tr>
+            <td height=30><a href="#top">[top]</a></td>
+          </tr>
+        </tfoot>
+      </table>
+      <hr/>
+      {{end}}
+
+    </div>
+
+    <div>
+      <h2>Showtimes for all movies</h2>
+      <table>
+        {{range .showtimes}}
+        <tr><td>{{.Time}}</td><td>{{.IdMovie}}</td><td>{{.Language}}</td><td>{{.RoomType}}</td><td>{{.IdTheater}}</td>
+          <td><a href="/buy/{{.GenKey}}">[comprar]</a></td></tr>
+        {{end}}
+        <tfoot>
+          <tr>
+            <td height=30><a href="#top">[top]</a></td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+{{template "footer.html" .}}
