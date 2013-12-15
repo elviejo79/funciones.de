@@ -23,6 +23,7 @@ type ActiveRecord struct {
 func (this *ActiveRecord) Save (label string, key string, obj map[string]interface{}){
 	var err error
 	this.node,_,err = GlobalDb().GetOrCreateNode(label,key,obj)
+
 	if err != nil {
                 log.Fatal("error en GetOrCreateNode %#v",err)
         }
@@ -31,7 +32,6 @@ func (this *ActiveRecord) Save (label string, key string, obj map[string]interfa
 	if err != nil {
                 log.Fatal("error en AddLabel %#v",err)
         }
-
 
 }
 

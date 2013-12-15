@@ -42,7 +42,7 @@ func movieCypherReturn() (cypher_return string){
 	return
 
 }
-func MovieByTitle(Title string) (Movie){
+func MovieByTitle(Title string) (m Movie, err error){
 
 	var results []Movie
 	cq := neoism.CypherQuery{
@@ -51,9 +51,14 @@ func MovieByTitle(Title string) (Movie){
                 Parameters: map[string]interface{}{},
                 Result: &results,
         }
-	
-        GlobalDb().Cypher(&cq)
-	return results[0]
+
+        GlobalDb().Cypher(&cq)	
+	if len(results)==0{
+		return m,fmt.Errorf("MovieByTitle: %#v",cq)
+	}
+
+	m = results[0]
+	return m,nil
 }
 
 func MoviesByTheaters(ts []Theater) (results []Movie){

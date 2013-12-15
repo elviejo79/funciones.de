@@ -8,7 +8,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 // CreateNode creates a Node in the database.
@@ -73,7 +72,7 @@ func (db *Database) GetOrCreateNode(label, key string, p Props) (n *Node, create
 	//make sure the label we are using is part of the ones the node has
 	label_found := false
 	labels,_ :=n.Labels()
-	fmt.Printf("%#v \n",labels)
+
 	for _,l := range labels {
 		if l==label {
 			label_found = true
